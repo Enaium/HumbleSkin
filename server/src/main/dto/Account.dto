@@ -1,0 +1,11 @@
+export cn.enaium.humbleskin.server.model.entity.Account
+
+LoginView {
+    #allScalars
+
+    characters {
+        id
+
+        name
+    }
+}

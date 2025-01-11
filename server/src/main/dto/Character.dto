@@ -1,0 +1,21 @@
+export cn.enaium.humbleskin.server.model.entity.Character
+
+LoginWithCharacterNameView {
+    account {
+        email
+    }
+}
+
+ProfileView {
+    id
+
+    name
+
+    model
+
+    textures {
+        type
+
+        hash
+    }
+}
