@@ -21,6 +21,7 @@ package cn.enaium.humbleskin.server.controller
 
 import cn.enaium.humbleskin.server.error.YggdrasilError
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 
@@ -32,5 +33,10 @@ class Error {
     @ExceptionHandler(YggdrasilError::class)
     fun yggdrasilError(e: YggdrasilError): ResponseEntity<YggdrasilError> {
         return ResponseEntity.status(e.httpStatus).body(e)
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    fun methodArgumentNotValidException(e: MethodArgumentNotValidException): ResponseEntity<String> {
+        return ResponseEntity.badRequest().build()
     }
 }

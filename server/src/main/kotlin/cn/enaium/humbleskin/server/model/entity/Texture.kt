@@ -19,10 +19,7 @@
 
 package cn.enaium.humbleskin.server.model.entity
 
-import org.babyfish.jimmer.sql.Entity
-import org.babyfish.jimmer.sql.KeyUniqueConstraint
-import org.babyfish.jimmer.sql.ManyToOne
-import org.babyfish.jimmer.sql.Table
+import org.babyfish.jimmer.sql.*
 
 /**
  * @author Enaium
@@ -36,5 +33,6 @@ interface Texture : BaseEntity {
 
     val type: TextureType
 
+    @Key
     val hash: String
 }

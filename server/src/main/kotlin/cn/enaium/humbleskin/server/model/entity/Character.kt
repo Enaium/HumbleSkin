@@ -28,6 +28,7 @@ import org.babyfish.jimmer.sql.*
 @Table(name = "character")
 @KeyUniqueConstraint
 interface Character : BaseEntity {
+    @Key
     val name: String
     val model: ModelType
 

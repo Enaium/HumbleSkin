@@ -1,0 +1,9 @@
+export cn.enaium.humbleskin.server.model.entity.Texture
+
+input TextureInput {
+    id(character) as characterId
+
+    type
+
+    content: String
+}

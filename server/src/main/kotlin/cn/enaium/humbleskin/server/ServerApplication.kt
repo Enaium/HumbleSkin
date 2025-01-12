@@ -20,6 +20,7 @@
 package cn.enaium.humbleskin.server
 
 import cn.enaium.humbleskin.server.config.CoreConfig
+import org.babyfish.jimmer.client.EnableImplicitApi
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
@@ -27,6 +28,7 @@ import org.springframework.boot.runApplication
 /**
  * @author Enaium
  */
+@EnableImplicitApi
 @SpringBootApplication
 @EnableConfigurationProperties(CoreConfig::class)
 open class ServerApplication

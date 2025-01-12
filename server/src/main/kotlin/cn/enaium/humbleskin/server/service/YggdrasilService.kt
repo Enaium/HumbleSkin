@@ -50,7 +50,11 @@ class YggdrasilService(
     private val objectMapper: ObjectMapper
 ) {
 
-    val timeout = 15.toLong()
+    val timeout = 15L
+
+    val accessTokenKey = "yggdrasil:accessToken"
+    val accountKey = "yggdrasil:account"
+    val serverKey = "yggdrasil:server"
 
     fun login(loginRequest: LoginRequest): LoginResponse {
 
@@ -174,7 +178,8 @@ class YggdrasilService(
 
     fun hasJoined(hasJoinedRequest: HasJoinedRequest): ProfileResponse? {
         val account = findAccount(hasJoinedRequest.username) ?: return null
-        val serverInfoString = stringRedisTemplate.opsForValue()["server:${hasJoinedRequest.serverId}"] ?: return null
+        val serverInfoString =
+            stringRedisTemplate.opsForValue()["$serverKey:${hasJoinedRequest.serverId}"] ?: return null
         val serverInfo = objectMapper.readValue(serverInfoString, ServerInfo::class.java)
 
         if (serverInfo.accountInfo.id != account.id) {
@@ -185,7 +190,7 @@ class YggdrasilService(
     }
 
     fun authenticate(accessToken: UUID, clientToken: UUID? = null): AccountInfo {
-        val accountInfoString = stringRedisTemplate.opsForValue()["accessToken:$accessToken"]
+        val accountInfoString = stringRedisTemplate.opsForValue()["$accessTokenKey:$accessToken"]
             ?: throw YggdrasilError.invalidToken()
 
         val accountInfo = objectMapper.readValue(accountInfoString, AccountInfo::class.java)
@@ -194,8 +199,8 @@ class YggdrasilService(
                 throw YggdrasilError.invalidToken()
             }
         }
-        stringRedisTemplate.expire("account:${accountInfo.id}", timeout, TimeUnit.DAYS)
-        stringRedisTemplate.expire("accessToken:$accessToken", timeout, TimeUnit.DAYS)
+        stringRedisTemplate.expire("$accountKey:${accountInfo.id}", timeout, TimeUnit.DAYS)
+        stringRedisTemplate.expire("$accessTokenKey:$accessToken", timeout, TimeUnit.DAYS)
         return accountInfo
     }
 
@@ -212,31 +217,31 @@ class YggdrasilService(
         val accountInfoString = objectMapper.writeValueAsString(accountInfo)
 
         if (stringRedisTemplate.opsForValue()[accountId.toString()] != null) {
-            stringRedisTemplate.delete("account:${accountId}")
-            stringRedisTemplate.delete("accessToken:${accountInfo.accessToken}")
+            stringRedisTemplate.delete("$accountKey:${accountId}")
+            stringRedisTemplate.delete("$accessTokenKey:${accountInfo.accessToken}")
         }
 
         stringRedisTemplate.opsForValue()
-            .set("account:${accountId}", accountInfoString, timeout, TimeUnit.DAYS)
+            .set("$accountKey:${accountId}", accountInfoString, timeout, TimeUnit.DAYS)
         stringRedisTemplate.opsForValue()
-            .set("accessToken:${accountInfo.accessToken}", accountInfoString, timeout, TimeUnit.DAYS)
+            .set("$accessTokenKey:${accountInfo.accessToken}", accountInfoString, timeout, TimeUnit.DAYS)
         return accountInfo
     }
 
     fun destroyToken(accountId: UUID? = null, accessToken: UUID? = null) {
         accountId?.also {
-            stringRedisTemplate.opsForValue()["account:${accountId}"]?.also {
+            stringRedisTemplate.opsForValue()["$accountKey:${accountId}"]?.also {
                 val accountInfo = objectMapper.readValue(it, AccountInfo::class.java)
-                stringRedisTemplate.delete("accessToken:${accountInfo.accessToken}")
-                stringRedisTemplate.delete("account:${accountInfo.id}")
+                stringRedisTemplate.delete("$accessTokenKey:${accountInfo.accessToken}")
+                stringRedisTemplate.delete("$accountKey:${accountInfo.id}")
             }
         }
 
         accountId?.also {
-            stringRedisTemplate.opsForValue()["accessToken:${accessToken}"]?.also {
+            stringRedisTemplate.opsForValue()["$accessTokenKey:${accessToken}"]?.also {
                 val accountInfo = objectMapper.readValue(it, AccountInfo::class.java)
-                stringRedisTemplate.delete("account:${accountInfo.id}")
-                stringRedisTemplate.delete("accessToken:${accountInfo.accessToken}")
+                stringRedisTemplate.delete("$accountKey:${accountInfo.id}")
+                stringRedisTemplate.delete("$accessTokenKey:${accountInfo.accessToken}")
             }
         }
     }

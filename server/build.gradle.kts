@@ -21,6 +21,7 @@ repositories {
 }
 
 dependencies {
+    implementation(libs.commons.codec)
     implementation(jimmers.springBootStarter)
     ksp(jimmers.ksp)
 
@@ -29,7 +30,7 @@ dependencies {
     implementation(libs.spring.boot.starter.data.redis)
     implementation(libs.jackson.module.kotlin)
     implementation(libs.kotlin.reflect)
-    runtimeOnly(libs.postgresql)
+    implementation(libs.postgresql)
     annotationProcessor(libs.spring.boot.configuration.processor)
 }
 

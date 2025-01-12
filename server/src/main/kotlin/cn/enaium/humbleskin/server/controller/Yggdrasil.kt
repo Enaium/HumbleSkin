@@ -24,7 +24,7 @@ import cn.enaium.humbleskin.server.model.http.*
 import cn.enaium.humbleskin.server.service.YggdrasilService
 import cn.enaium.humbleskin.server.utility.toUUID
 import jakarta.servlet.http.HttpServletRequest
-import org.slf4j.LoggerFactory
+import org.babyfish.jimmer.client.ApiIgnore
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.*
 /**
  * @author Enaium
  */
+@ApiIgnore
 @RestController
 class Yggdrasil(
     private val serverMeta: ServerMeta,

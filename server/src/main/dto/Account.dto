@@ -1,4 +1,5 @@
 export cn.enaium.humbleskin.server.model.entity.Account
+import jakarta.validation.constraints.{ NotBlank, Email }
 
 LoginView {
     #allScalars
@@ -7,5 +8,48 @@ LoginView {
         id
 
         name
+    }
+}
+
+input LoginInput {
+    @NotBlank
+    email
+
+    @NotBlank
+    password
+}
+
+SessionView {
+    id
+
+    authorization: String
+}
+
+RegisterInput {
+    @Email
+    @NotBlank
+    email
+
+    @NotBlank
+    password
+
+    confirmPassword: String
+}
+
+AccountView {
+    id
+
+    email
+
+    characters {
+        id
+
+        name
+
+        textures {
+            type
+
+            hash
+        }
     }
 }

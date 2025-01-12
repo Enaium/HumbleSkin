@@ -2,6 +2,8 @@
 kotlin = "2.1.0"
 springboot = "3.4.1"
 dependencyManagement = "1.1.7"
+codec = "1.17.2"
+
 
 [libraries]
 spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
@@ -11,6 +13,7 @@ spring-boot-configuration-processor = { module = "org.springframework.boot:sprin
 jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect" }
 postgresql = { module = "org.postgresql:postgresql" }
+commons-codec = { module = "commons-codec:commons-codec" }
 
 
 [plugins]

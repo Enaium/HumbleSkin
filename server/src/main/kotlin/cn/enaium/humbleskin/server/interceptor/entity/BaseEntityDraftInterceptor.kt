@@ -17,14 +17,27 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cn.enaium.humbleskin.server.error
+package cn.enaium.humbleskin.server.interceptor.entity
 
-import org.babyfish.jimmer.error.ErrorFamily
+import cn.enaium.humbleskin.server.model.entity.BaseEntity
+import cn.enaium.humbleskin.server.model.entity.BaseEntityDraft
+import org.babyfish.jimmer.kt.isLoaded
+import org.babyfish.jimmer.sql.DraftInterceptor
+import org.springframework.stereotype.Component
+import java.time.Instant
 
 /**
  * @author Enaium
  */
-@ErrorFamily
-enum class UserError(val message: String) {
-    INVALID_CREDENTIALS("Invalid credentials. Invalid username or password."),
+@Component
+class BaseEntityDraftInterceptor : DraftInterceptor<BaseEntity, BaseEntityDraft> {
+    override fun beforeSave(draft: BaseEntityDraft, original: BaseEntity?) {
+        if (!isLoaded(draft, BaseEntity::modifiedTime)) {
+            draft.modifiedTime = Instant.now()
+        }
+
+        if (original === null && !isLoaded(draft, BaseEntity::createdTime)) {
+            draft.createdTime = Instant.now()
+        }
+    }
 }

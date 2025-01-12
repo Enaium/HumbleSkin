@@ -20,6 +20,8 @@
 package cn.enaium.humbleskin.server.model.entity
 
 import org.babyfish.jimmer.sql.Entity
+import org.babyfish.jimmer.sql.Key
+import org.babyfish.jimmer.sql.KeyUniqueConstraint
 import org.babyfish.jimmer.sql.OneToMany
 import org.babyfish.jimmer.sql.Table
 
@@ -28,7 +30,9 @@ import org.babyfish.jimmer.sql.Table
  */
 @Entity
 @Table(name = "account")
+@KeyUniqueConstraint
 interface Account : BaseEntity {
+    @Key
     val email: String
     val password: String
 

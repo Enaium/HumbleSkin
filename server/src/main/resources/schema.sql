@@ -1,12 +1,22 @@
 create schema if not exists humble_skin;
 
+DO
+'
+BEGIN
+CREATE TYPE account_role AS enum (''admin'', ''normal'');
+EXCEPTION
+WHEN duplicate_object THEN null;
+END
+';
+
 create table if not exists humble_skin.account
 (
     created_time  timestamptz not null,
     modified_time timestamptz not null,
     id            uuid primary key,
     email         text unique not null,
-    password      text        not null
+    password      text        not null,
+    role          humble_skin.account_role
 );
 
 
@@ -45,6 +55,6 @@ create table if not exists humble_skin.texture
     id            uuid primary key,
     character_id  uuid references humble_skin.character (id) not null,
     type          humble_skin.texture_type                   not null,
-    hash          text                                       not null,
+    hash          text unique                                not null,
     constraint unique_texture unique (character_id, type)
 )

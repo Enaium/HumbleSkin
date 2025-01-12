@@ -17,27 +17,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package cn.enaium.humbleskin.server.interceptor
+package cn.enaium.humbleskin.server.controller
 
-import cn.enaium.humbleskin.server.model.entity.BaseEntity
-import cn.enaium.humbleskin.server.model.entity.BaseEntityDraft
-import org.babyfish.jimmer.kt.isLoaded
-import org.babyfish.jimmer.sql.DraftInterceptor
-import org.springframework.stereotype.Component
-import java.time.Instant
+import cn.enaium.humbleskin.server.error.SessionException
+import cn.enaium.humbleskin.server.model.entity.dto.LoginInput
+import cn.enaium.humbleskin.server.model.entity.dto.SessionView
+import cn.enaium.humbleskin.server.service.SessionService
+import jakarta.validation.Valid
+import org.springframework.web.bind.annotation.*
 
 /**
  * @author Enaium
  */
-@Component
-class BaseEntityDraftInterceptor : DraftInterceptor<BaseEntity, BaseEntityDraft> {
-    override fun beforeSave(draft: BaseEntityDraft, original: BaseEntity?) {
-        if (!isLoaded(draft, BaseEntity::modifiedTime)) {
-            draft.modifiedTime = Instant.now()
-        }
+@RestController
+@RequestMapping("/session")
+class Session(
+    val sessionService: SessionService
+) {
+    @PostMapping
+    @Throws(SessionException::class)
+    fun login(@RequestBody @Valid loginInput: LoginInput): SessionView {
+        return sessionService.login(loginInput)
+    }
 
-        if (original === null && !isLoaded(draft, BaseEntity::createdTime)) {
-            draft.createdTime = Instant.now()
-        }
+    @DeleteMapping
+    fun logout() {
+        sessionService.logout()
     }
 }
